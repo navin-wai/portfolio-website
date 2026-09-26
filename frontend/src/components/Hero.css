@@ -1,0 +1,222 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+}
+
+.hero::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    circle 12rem at var(--mouse-x) var(--mouse-y),
+    rgb(255 255 255 / 22%),
+    rgb(255 255 255 / 8%) 35%,
+    transparent 72%
+  );
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.hero.is-pointer-active::before {
+  opacity: 1;
+}
+
+.hero::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.38),
+    transparent 42%,
+    rgba(0, 0, 0, 0.6)
+  );
+  content: "";
+}
+
+.hero-image {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-content {
+  position: relative;
+  min-height: 100svh;
+  padding: clamp(1.5rem, 4vw, 4rem);
+  box-sizing: border-box;
+}
+
+.hero-title,
+.hero-description,
+.hero-marquee {
+  position: absolute;
+  margin: 0;
+}
+
+.hero-title {
+  top: clamp(1.5rem, 5vw, 4rem);
+  left: clamp(1.5rem, 5vw, 4rem);
+  max-width: 55%;
+  font-size: 1rem;
+  font-weight: 100;
+}
+
+.hero-description {
+  top: clamp(1.5rem, 5vw, 4rem);
+  right: clamp(1.5rem, 5vw, 4rem);
+  width: min(28rem, 34vw);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.hero-bottom {
+  position: absolute;
+  right: 0;
+  bottom: clamp(1rem, 3vh, 2.5rem);
+  left: 0;
+}
+
+.hero-marquee {
+  position: relative;
+  top: clamp(0.75rem, 2vh, 1.5rem);
+  left: 0;
+  width: 100vw;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-navigation {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 0.35rem;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0.35rem;
+  overflow: visible;
+  border: 1px solid rgb(255 255 255 / 32%);
+  border-radius: 999px;
+  background: rgb(5 5 5 / 82%);
+  box-shadow:
+    0 1rem 3rem rgb(0 0 0 / 35%),
+    inset 0 1px rgb(255 255 255 / 14%);
+  backdrop-filter: blur(16px);
+  animation: nav-arrive 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  justify-content: center;
+}
+
+.hero-navigation-link {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  padding: 0.7rem 1.1rem;
+  overflow: hidden;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.hero-navigation-link::after {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.35rem;
+  left: 1rem;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.hero-navigation-link:hover,
+.hero-navigation-link:focus-visible {
+  background: #fff;
+  color: #050505;
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.hero-navigation-link:hover::after,
+.hero-navigation-link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+@keyframes nav-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hero-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 12s linear infinite;
+  font-size: 14rem;
+  font-weight: 350;
+  letter-spacing: 0.01em;
+  line-height: 2;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.hero-marquee-track span {
+  flex-shrink: 0;
+  padding-right: 3rem;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    max-width: 55%;
+  }
+
+  .hero-description {
+    width: 42%;
+  }
+
+  .hero-navigation {
+    max-width: calc(100% - 2rem);
+  }
+
+  .hero-navigation-link {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.62rem;
+  }
+}
