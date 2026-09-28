@@ -26,7 +26,7 @@ app.post("/api/contact", async (req, res) => {
       });
     }
 
-    await transporter.sendMail({
+    const mailOptions = {
       from: process.env.GMAIL_USER,
       to: process.env.GMAIL_USER,
       replyTo: email,
@@ -39,10 +39,14 @@ app.post("/api/contact", async (req, res) => {
         <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
         <p><strong>Message:</strong> ${message}</p>
       `,
+    };
+
+    res.status(202).json({
+      message: "Form received successfully",
     });
 
-    res.json({
-      message: "Form submitted successfully",
+    transporter.sendMail(mailOptions).catch((error) => {
+      console.error("Failed to send contact email:", error);
     });
   } catch (error) {
     console.error(error);

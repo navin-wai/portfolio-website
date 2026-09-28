@@ -46,7 +46,7 @@ function Contact() {
 
       setStatus({
         type: "success",
-        message: "Thanks for reaching out. Your message is sent",
+        message: "Thanks for reaching out. Your message was received.",
       });
       setForm(initialForm);
     } catch (error) {
