@@ -32,8 +32,6 @@ function SplashCursor({
 
     // Track if the effect is still active for cleanup
     let isActive = true;
-    let isVisible = true;
-    let visibilityObserver = null;
 
     function pointerPrototype() {
       this.id = -1;
@@ -804,20 +802,8 @@ function SplashCursor({
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;
 
-    const homeSection = canvas.closest(".home-page");
-    if (homeSection && "IntersectionObserver" in window) {
-      visibilityObserver = new IntersectionObserver(([entry]) => {
-        isVisible = entry.isIntersecting;
-        if (isVisible && !animationFrameId.current) updateFrame();
-      });
-      visibilityObserver.observe(homeSection);
-    }
-
     function updateFrame() {
-      if (!isActive || !isVisible) {
-        animationFrameId.current = null;
-        return;
-      }
+      if (!isActive) return;
       const dt = calcDeltaTime();
       if (resizeCanvas()) initFramebuffers();
       updateColors(dt);
@@ -1249,7 +1235,6 @@ function SplashCursor({
     // Cleanup function
     return () => {
       isActive = false;
-      visibilityObserver?.disconnect();
 
       // Cancel animation frame
       if (animationFrameId.current) {
