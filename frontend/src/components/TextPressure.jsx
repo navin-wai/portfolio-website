@@ -42,6 +42,7 @@ const TextPressure = ({
   className = "",
 
   minFontSize = 24,
+  maxFontSize = Number.POSITIVE_INFINITY,
 }) => {
   const containerRef = useRef(null);
   const titleRef = useRef(null);
@@ -92,7 +93,7 @@ const TextPressure = ({
       containerRef.current.getBoundingClientRect();
 
     let newFontSize = containerW / (chars.length / 2);
-    newFontSize = Math.max(newFontSize, minFontSize);
+    newFontSize = Math.min(Math.max(newFontSize, minFontSize), maxFontSize);
 
     setFontSize(newFontSize);
     setScaleY(1);
@@ -108,7 +109,7 @@ const TextPressure = ({
         setLineHeight(yRatio);
       }
     });
-  }, [chars.length, minFontSize, scale]);
+  }, [chars.length, maxFontSize, minFontSize, scale]);
 
   useEffect(() => {
     const debouncedSetSize = debounce(setSize, 100);
@@ -191,7 +192,7 @@ const TextPressure = ({
         }
       `}</style>
     );
-  }, [fontFamily, fontUrl, textColor, strokeColor]);
+  }, [fontUrl, textColor, strokeColor]);
 
   const dynamicClassName = [
     className,

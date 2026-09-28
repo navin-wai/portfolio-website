@@ -3,6 +3,11 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 html,
@@ -12,7 +17,11 @@ body,
 }
 
 body {
-  /* background: #111; */
+  background: #111;
   color: #fff;
   font-family: "Inter", sans-serif;
+}
+
+.portfolio-page-shell {
+  width: 100%;
 }

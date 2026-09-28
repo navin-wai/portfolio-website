@@ -1,5 +1,4 @@
 import "./Projects.css";
-import { Link } from "react-router-dom";
 import TextPressure from "../components/TextPressure";
 import BlogifyImg from "../assets/blogify.png";
 import NaviExpense from "../assets/NaviExpense.png";
@@ -8,7 +7,7 @@ import todoform from "../assets/todoform.png";
 
 function Projects() {
   return (
-    <main className="projects-page">
+    <main className="projects-page" id="projects">
       <div className="projects-heading">
         <TextPressure
           text="Projects!"
@@ -21,12 +20,8 @@ function Projects() {
           textColor="#ffffff"
           strokeColor="#ffffff"
           minFontSize={36}
+          maxFontSize={180}
         />
-      </div>
-      <div className="projects-back-wrapper">
-        <Link className="projects-back-link" to="/">
-          Back
-        </Link>
       </div>
       <div className="projects-grid">
         <article className="project-card">

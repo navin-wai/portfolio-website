@@ -1,0 +1,67 @@
+.skills-page {
+  min-height: 100vh;
+  padding: 1rem clamp(1.25rem, 5vw, 5rem) 3rem;
+  background: #0b0d12;
+  color: #fff;
+}
+
+.skills-heading {
+  position: relative;
+  height: clamp(120px, 18vw, 190px);
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.skills-heading-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.skills-group {
+  padding: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.skills-group h3 {
+  margin-bottom: 0.75rem;
+  color: #a8afbd;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.skill-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
