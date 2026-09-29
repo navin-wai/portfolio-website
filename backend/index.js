@@ -26,6 +26,13 @@ app.post("/api/contact", async (req, res) => {
       });
     }
 
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+      console.error("Contact email is not configured on the backend");
+      return res.status(503).json({
+        message: "Email service is not configured",
+      });
+    }
+
     const mailOptions = {
       from: process.env.GMAIL_USER,
       to: process.env.GMAIL_USER,
@@ -49,8 +56,8 @@ app.post("/api/contact", async (req, res) => {
   } catch (error) {
     console.error("Failed to send contact email:", error);
 
-    res.status(500).json({
-      message: "Failed to send email",
+    res.status(502).json({
+      message: "Email service could not send the message",
     });
   }
 });

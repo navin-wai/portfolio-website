@@ -27,6 +27,9 @@ function Contact() {
     setIsSubmitting(true);
     setStatus({ type: "", message: "" });
 
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 90000);
+
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/contact`,
@@ -36,9 +39,10 @@ function Contact() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(form),
+          signal: controller.signal,
         },
       );
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         throw new Error(data.message || "Something went wrong");
@@ -53,10 +57,13 @@ function Contact() {
       setStatus({
         type: "error",
         message:
-          error.message ||
-          "We could not send your message. Please try again shortly.",
+          error.name === "AbortError"
+            ? "The email service took too long to respond. Please try again."
+            : error.message ||
+              "We could not send your message. Please try again shortly.",
       });
     } finally {
+      window.clearTimeout(timeoutId);
       setIsSubmitting(false);
     }
   };
