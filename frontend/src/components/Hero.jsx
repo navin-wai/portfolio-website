@@ -1,10 +1,9 @@
-import navinImage from "../assets/navin.png";
 import "./Hero.css";
 
 function Hero() {
   return (
     <main className="hero">
-      <img className="hero-image" src={navinImage} alt="Navin Image" />
+      <img className="hero-image" src="/navin.png" alt="Navin Image" />
       <div className="hero-content">
         <p className="hero-title">@ Code With Navin</p>
         <p className="hero-description">
