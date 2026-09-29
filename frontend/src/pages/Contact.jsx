@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./Contact.css";
-import DepthText from "../components/DepthText";
+import TechText from "../components/TechText";
 
 const initialForm = {
   name: "",
@@ -64,22 +64,30 @@ function Contact() {
   return (
     <main className="contact-page" id="contact">
       <div className="contact-shell">
-        <DepthText
-          text="Let's Contact"
-          layers={34}
-          depth={2.4}
-          faceColor="#f8fafc"
-          depthColor="#949494"
-          tilt={7.5}
-          pointerTracking
-          smoothing={0.14}
-          perspective={900}
-          autoOrbit
-          orbitSpeed={0.35}
-          fontSize="clamp(3rem, 12vw, 7rem)"
-          fontWeight={900}
-          shadow
-        />
+        <div className="contact-heading">
+          <TechText
+            text="Let's Contact"
+            fontWeight={600}
+            fontSize={150}
+            reveal="letter"
+            dashLength={4}
+            dashGap={2}
+            specks={15}
+            fontFamily=""
+            color="#ffffff"
+            accentColor="#ffffff"
+            letterSpacing={-0.05}
+            reach={200}
+            softness={0.7}
+            strokeWidth={1.5}
+            speed={1}
+            lineStyle="dashed"
+            selection
+            labels
+            draggable
+            sweep
+          />
+        </div>
         <div className="contact-topbar">
           <a className="contact-back-link" href="#home">
             Back

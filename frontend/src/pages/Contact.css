@@ -7,9 +7,7 @@
   box-sizing: border-box;
   padding: 1.5rem clamp(1.25rem, 5vw, 5rem) 4rem;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.09), transparent 25rem),
-    var(--contact-background);
+  background: var(--contact-background);
   color: #fff;
 }
 
@@ -18,10 +16,16 @@
   margin: 0 auto;
 }
 
-.contact-shell > .depth-text {
-  display: block;
+.contact-heading {
+  position: relative;
+  height: clamp(120px, 18vw, 190px);
+  max-width: 1180px;
   margin: 0 auto 0.5rem;
-  text-align: center;
+}
+
+.contact-heading .tech-text {
+  width: 100%;
+  height: 100%;
 }
 
 .contact-form-heading,

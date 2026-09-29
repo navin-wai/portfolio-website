@@ -41,15 +41,13 @@ app.post("/api/contact", async (req, res) => {
       `,
     };
 
-    res.status(202).json({
-      message: "Form received successfully",
-    });
+    await transporter.sendMail(mailOptions);
 
-    transporter.sendMail(mailOptions).catch((error) => {
-      console.error("Failed to send contact email:", error);
+    res.status(200).json({
+      message: "Message sent successfully",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Failed to send contact email:", error);
 
     res.status(500).json({
       message: "Failed to send email",
