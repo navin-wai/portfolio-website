@@ -19,13 +19,34 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "ok",
-    emailConfigured: Boolean(
-      process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD,
-    ),
-  });
+app.get("/health", async (req, res) => {
+  const emailConfigured = Boolean(
+    process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD,
+  );
+
+  if (!emailConfigured) {
+    return res.status(503).json({
+      status: "degraded",
+      emailConfigured: false,
+      smtpReady: false,
+    });
+  }
+
+  try {
+    await transporter.verify();
+    return res.status(200).json({
+      status: "ok",
+      emailConfigured: true,
+      smtpReady: true,
+    });
+  } catch (error) {
+    console.error("SMTP health check failed:", error);
+    return res.status(503).json({
+      status: "degraded",
+      emailConfigured: true,
+      smtpReady: false,
+    });
+  }
 });
 
 app.post("/api/contact", async (req, res) => {
