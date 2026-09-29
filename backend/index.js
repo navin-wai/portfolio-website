@@ -48,6 +48,8 @@ app.get("/health", async (req, res) => {
       status: "degraded",
       emailConfigured: true,
       smtpReady: false,
+      smtpError: error.code || "SMTP_CONNECTION_FAILED",
+      smtpResponseCode: error.responseCode || null,
     });
   }
 });
