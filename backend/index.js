@@ -10,10 +10,22 @@ app.use(express.json());
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 30000,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    emailConfigured: Boolean(
+      process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD,
+    ),
+  });
 });
 
 app.post("/api/contact", async (req, res) => {
