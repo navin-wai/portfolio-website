@@ -5,14 +5,18 @@ require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const smtpPort = Number(process.env.SMTP_PORT || 465);
+const smtpSecure = process.env.SMTP_SECURE
+  ? process.env.SMTP_SECURE === "true"
+  : smtpPort === 465;
 app.use(cors());
 app.use(express.json());
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: Number(process.env.SMTP_PORT || 587),
-  secure: process.env.SMTP_SECURE === "true",
-  requireTLS: process.env.SMTP_SECURE !== "true",
+  port: smtpPort,
+  secure: smtpSecure,
+  requireTLS: !smtpSecure,
   connectionTimeout: 10000,
   greetingTimeout: 10000,
   socketTimeout: 30000,
