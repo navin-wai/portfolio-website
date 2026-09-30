@@ -9,6 +9,11 @@ const smtpPort = Number(process.env.SMTP_PORT || 465);
 const smtpSecure = process.env.SMTP_SECURE
   ? process.env.SMTP_SECURE === "true"
   : smtpPort === 465;
+const resendConfigured = Boolean(
+  process.env.RESEND_API_KEY &&
+  process.env.RESEND_FROM_EMAIL &&
+  process.env.RESEND_TO_EMAIL,
+);
 app.use(cors());
 app.use(express.json());
 
@@ -26,10 +31,56 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+async function verifyEmailService() {
+  if (resendConfigured) {
+    const response = await fetch("https://api.resend.com/domains", {
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Resend API returned ${response.status}`);
+    }
+
+    return;
+  }
+
+  await transporter.verify();
+}
+
+async function sendEmail(mailOptions) {
+  if (resendConfigured) {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: process.env.RESEND_FROM_EMAIL,
+        to: [process.env.RESEND_TO_EMAIL],
+        reply_to: mailOptions.replyTo,
+        subject: mailOptions.subject,
+        html: mailOptions.html,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Resend API returned ${response.status}: ${errorBody}`);
+    }
+
+    return;
+  }
+
+  await transporter.sendMail(mailOptions);
+}
+
 app.get("/health", async (req, res) => {
-  const emailConfigured = Boolean(
-    process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD,
-  );
+  const emailConfigured =
+    resendConfigured ||
+    Boolean(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD);
 
   if (!emailConfigured) {
     return res.status(503).json({
@@ -40,7 +91,7 @@ app.get("/health", async (req, res) => {
   }
 
   try {
-    await transporter.verify();
+    await verifyEmailService();
     return res.status(200).json({
       status: "ok",
       emailConfigured: true,
@@ -68,7 +119,10 @@ app.post("/api/contact", async (req, res) => {
       });
     }
 
-    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    if (
+      !resendConfigured &&
+      (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD)
+    ) {
       console.error("Contact email is not configured on the backend");
       return res.status(503).json({
         message: "Email service is not configured",
@@ -76,8 +130,12 @@ app.post("/api/contact", async (req, res) => {
     }
 
     const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to: process.env.GMAIL_USER,
+      from: resendConfigured
+        ? process.env.RESEND_FROM_EMAIL
+        : process.env.GMAIL_USER,
+      to: resendConfigured
+        ? process.env.RESEND_TO_EMAIL
+        : process.env.GMAIL_USER,
       replyTo: email,
       subject: `New Form Submission from ${name}`,
       html: `
@@ -90,7 +148,7 @@ app.post("/api/contact", async (req, res) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    await sendEmail(mailOptions);
 
     res.status(200).json({
       message: "Message sent successfully",
