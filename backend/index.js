@@ -13,10 +13,11 @@ app.use(express.json());
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
+  port: 587,
+  secure: false,
+  requireTLS: true,
+  connectionTimeout: 30000,
+  greetingTimeout: 30000,
   socketTimeout: 30000,
   auth: {
     user: emailUser,
